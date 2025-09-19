@@ -9,21 +9,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 st.set_page_config(page_title="Cournot Duopolio — Visualizador", layout="wide")
-st.title("Duopolio de Cournot — Visualizador interactivo (solución interior)")
-
-# --- Texto + fórmulas (usar st.latex para render correcto) ---
-st.markdown("**Modelo:** demanda inversa lineal y costos marginales constantes.")
-st.latex(r"P(Q)=a-bQ,\quad Q=q_1+q_2")
-st.latex(r"\text{CM}_1=c_1,\quad \text{CM}_2=c_2")
-st.markdown("**Equilibrio (interior):**")
-st.latex(
-    r"""
-    q_1^\*=\frac{a-2c_1+c_2}{3b},\qquad
-    q_2^\*=\frac{a-2c_2+c_1}{3b},\qquad
-    Q^\*=\frac{2a-(c_1+c_2)}{3b},\qquad
-    P^\*=a-bQ^\*.
-    """
-)
+st.title("Duopolio de Cournot")
 
 # -----------------------------
 # Sidebar de parámetros
@@ -145,3 +131,4 @@ m2.metric("q₂*", f"{q2s:.2f}")
 m3.metric("Q*",  f"{Qs:.2f}")
 m4.metric("P*",  f"{Ps:.2f}")
 st.caption(f"Excedente del consumidor ≈ {CS:.2f}")
+
