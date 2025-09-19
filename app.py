@@ -110,8 +110,8 @@ with col2:
     ax2.axhline(Ps, linestyle="--")
     ax2.scatter([Qs], [Ps], zorder=5)
 
-    ax2.annotate(fr"Q^\*={Qs:.2f}", (Qs, 0), textcoords="offset points", xytext=(5, 6))
-    ax2.annotate(fr"P^\*={Ps:.2f}", (0, Ps), textcoords="offset points", xytext=(5, 6))
+    ax2.annotate(fr"Q*={Qs:.2f}", (Qs, 0), textcoords="offset points", xytext=(5, 6))
+    ax2.annotate(fr"P*={Ps:.2f}", (0, Ps), textcoords="offset points", xytext=(5, 6))
 
     ax2.set_xlabel("Q")
     ax2.set_ylabel("P")
@@ -131,4 +131,5 @@ m2.metric("q₂*", f"{q2s:.2f}")
 m3.metric("Q*",  f"{Qs:.2f}")
 m4.metric("P*",  f"{Ps:.2f}")
 st.caption(f"Excedente del consumidor ≈ {CS:.2f}")
+
 
