@@ -57,18 +57,16 @@ m1.metric("p* (Bertrand)", f"{p_star:.2f}")
 m2.metric("Q*", f"{Q_star:.2f}")
 m3.metric("CS", f"{CS:.2f}")
 m4.metric("DWL", f"{DWL:.2f}")
-n1, n2 = st.columns(2)
-n1.metric("π₁", f"{pi1:.2f}")
-n2.metric("π₂", f"{pi2:.2f}")
 st.info(winner)
 if Q_star <= 0:
     st.warning("A este precio de equilibrio, la demanda es nula (Q*=0).")
 
 # -----------------------
-# Gráfico 1: Demanda inversa con CS, π y DWL
+# Gráficos (arriba: izquierda demanda; derecha mejores respuestas)
 # -----------------------
 left, right = st.columns(2)
 
+# (A) Demanda inversa con CS, π y DWL (izquierda)
 Q_int = a / b if b > 0 else 0.0
 Qmax_plot = max(Q_int, Q_pc, Q_star)
 Q = np.linspace(0, max(Qmax_plot, 1e-9), 400)
@@ -92,24 +90,13 @@ if Q_pc > Q_star:
 
 axA.set_xlim(0, max(Qmax_plot, 1e-9)*1.02)
 axA.set_ylim(0, max(a, p_star, c_min)*1.05)
-axA.set_xlabel("Cantidad Q"); axA.set_ylabel("Precio / Costo")
+axA.set_xlabel("Cantidad Q")
+axA.set_ylabel("Precio / Costo")
 axA.set_title("Bertrand (duopolio): CS, π y DWL")
 axA.legend(loc="best")
 left.pyplot(figA, clear_figure=True)
 
-# -----------------------
-# Gráfico 2: Barras de ganancias por firma
-# -----------------------
-figB, axB = plt.subplots()
-axB.bar(["Firma 1", "Firma 2"], [pi1, pi2])
-axB.set_ylabel("Ganancia πᵢ"); axB.set_title("Ganancias por firma")
-right.pyplot(figB, clear_figure=True)
-
-# -----------------------
-# Gráfico 3: Funciones de reacción (tramos exactos)
-# -----------------------
-st.subheader("Mejores respuestas (funciones de reacción)")
-
+# (B) Mejores respuestas (derecha)
 p1_max = (a + c1) / 2.0
 p2_max = (a + c2) / 2.0
 p_lo   = 0.0
@@ -117,34 +104,32 @@ p_hi   = max(a, p1_max, p2_max, c1, c2, p_star) * 1.05
 
 figC, axC = plt.subplots()
 
-# RF1: tres tramos (vertical, diagonal, vertical)
+# RF1: vertical–diagonal–vertical
 axC.plot([c1, c1], [p_lo, c1], color="#1f77b4", linewidth=3, label="RF₁: p₁*(p₂)")
 axC.plot([c1, p1_max], [c1, p1_max], color="#1f77b4", linewidth=3)
 axC.plot([p1_max, p1_max], [p1_max, p_hi], color="#1f77b4", linewidth=3)
 
-# RF2: tres tramos (horizontal, diagonal, horizontal)
+# RF2: horizontal–diagonal–horizontal
 axC.plot([p_lo, c2], [c2, c2], color="#2ca02c", linewidth=3, label="RF₂: p₂*(p₁)")
 axC.plot([c2, p2_max], [c2, p2_max], color="#2ca02c", linewidth=3)
 axC.plot([p2_max, p_hi], [p2_max, p2_max], color="#2ca02c", linewidth=3)
 
-# Referencias
-axC.plot([p_lo, p_hi], [p_lo, p_hi], linestyle="--", color="gray", linewidth=1)    # diagonal p1=p2
+# Referencias y punto (p*,p*)
+axC.plot([p_lo, p_hi], [p_lo, p_hi], linestyle="--", color="gray", linewidth=1)  # diagonal
 axC.axvline(p1_max, linestyle=":", color="#1f77b4", linewidth=1)
 axC.axhline(p2_max, linestyle=":", color="#2ca02c", linewidth=1)
 axC.axvline(c1,     linestyle="-", color="#1f77b4", linewidth=2, alpha=0.25)
 axC.axhline(c2,     linestyle="-", color="#2ca02c", linewidth=2, alpha=0.25)
-axC.text(c1, p_lo + 0.02*(p_hi-p_lo), "MC₁", ha="center", va="bottom", color="#1f77b4")
-axC.text(p_lo + 0.02*(p_hi-p_lo), c2, "MC₂", va="center", color="#2ca02c")
-
-# Punto-límite (p*,p*) = (c_max,c_max)
 axC.scatter([c_max], [c_max], marker="x", s=80, color="k", zorder=5)
 axC.annotate("  (p*, p*)", (c_max, c_max), va="center")
 
-axC.set_xlim(p_lo, p_hi); axC.set_ylim(p_lo, p_hi)
-axC.set_xlabel("Precio p₁"); axC.set_ylabel("Precio p₂")
+axC.set_xlim(p_lo, p_hi)
+axC.set_ylim(p_lo, p_hi)
+axC.set_xlabel("Precio p₁")
+axC.set_ylabel("Precio p₂")
 axC.set_title("Funciones de reacción en precios (duopolio Bertrand)")
 axC.legend(loc="lower right")
-st.pyplot(figC, clear_figure=True)
+right.pyplot(figC, clear_figure=True)
 
 # -----------------------
 # Notas
@@ -162,8 +147,8 @@ with st.expander("Notas / reacción 'undercut'"):
   \end{cases}
   \]
   **RF₂** es análoga con \(c_2\) y \(p_2^{\max}=\frac{a+c_2}{2}\).
-- El punto marcado \((p^*,p^*)=(\max\{c_1,c_2\},\max\{c_1,c_2\})\) es el **límite competitivo de Bertrand**: la firma de menor costo puede
-  subcotizar hasta igualar el costo alto y quedarse con todo el mercado.
+- El punto \((p^*,p^*)=(\max\{c_1,c_2\},\max\{c_1,c_2\})\) es el **límite competitivo de Bertrand**.
         """
     )
+
 
