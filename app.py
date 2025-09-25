@@ -27,7 +27,7 @@ oligo_asim = st.Page("pages/5_Oligopolio_Cournot_Asimetrico.py", title="Oligopol
 stack      = st.Page("pages/2_Stackelberg_Duopolio.py",         title="Duopolio de Stackelberg")
 hotelling  = st.Page("pages/4_Hotelling_Lineal.py",             title="Hotelling lineal")
 colusion   = st.Page("pages/3_Colusion.py",                     title="Colusión Cournot")
-bertrand   = st.Page("pages/7_Bertrand_Homogeneo.py",           title="Bertrand homogéneo")
+bertrand   = st.Page("pages/7_Bertrand_Homogeneo.py",           title="Duopolio de Bertrand homogéneo")
 
 # --- Router ---
-st.navigation([home, monopolio, cournot, oligo_asim, bertrand, stack, hotelling, colusion]).run()
+st.navigation([home, monopolio, cournot, bertrand, oligo_asim, hotelling, stack, colusion]).run()
