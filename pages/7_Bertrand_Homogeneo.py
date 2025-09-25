@@ -96,56 +96,45 @@ axA.set_title("Bertrand (duopolio): CS, π y DWL")
 axA.legend(loc="best")
 left.pyplot(figA, clear_figure=True)
 
-# (B) Mejores respuestas (derecha) con separación interna ε
+# (B) Mejores respuestas (derecha) – tramos completos con separación ε
 p1_max = (a + c1) / 2.0
 p2_max = (a + c2) / 2.0
 p_lo   = 0.0
 p_hi   = max(a, p1_max, p2_max, c1, c2, p_star) * 1.05
 
-# ε interno: pequeño y proporcional al rango de la figura
-eps = max(0.02 * (p_hi - p_lo), 0.1)   # 2% del rango, mínimo 0.1
+# ε interno proporcional al rango, mínimo 0.1
+eps = max(0.02 * (p_hi - p_lo), 0.1)
 
 figC, axC = plt.subplots()
 
-# RF1: vertical en x=c1 hasta y=c1
+# --- RF1 ---
+# vertical en x=c1 para p2 ≤ c1
 axC.plot([c1, c1], [p_lo, c1], color="#1f77b4", linewidth=3, label="RF₁: p₁*(p₂)")
-
-# RF1: tramo “diagonal” con undercut estricto: y = x + ε, hasta justo antes de (p*,p*)
-x1_start = c1
-x1_end_theoretical = p1_max - eps
-x1_end = min(x1_end_theoretical, p_star - 1e-9)
-if x1_end > x1_start:
-    x_mid = np.linspace(x1_start, x1_end, 200)
-    y_mid = x_mid + eps
-    axC.plot(x_mid, y_mid, color="#1f77b4", linewidth=3)
-
-# RF1: vertical en x=p1_max desde y=p1_max
+# tramo oblicuo (undercut estricto): y = x + ε para p2∈(c1, p1_max)
+x_mid1 = np.linspace(c1, p1_max, 300)
+y_mid1 = x_mid1 + eps
+axC.plot(x_mid1, y_mid1, color="#1f77b4", linewidth=3)
+# vertical en x=p1_max para p2 ≥ p1_max
 axC.plot([p1_max, p1_max], [p1_max, p_hi], color="#1f77b4", linewidth=3)
 
-# RF2: horizontal en y=c2 hasta x=c2
+# --- RF2 ---
+# horizontal en y=c2 para p1 ≤ c2
 axC.plot([p_lo, c2], [c2, c2], color="#2ca02c", linewidth=3, label="RF₂: p₂*(p₁)")
-
-# RF2: tramo “diagonal” con undercut estricto: y = x − ε
-x2_start = c2 + eps
-x2_end_theoretical = p2_max
-x2_end = min(x2_end_theoretical, p_star - 1e-9)
-if x2_end > x2_start:
-    x_mid2 = np.linspace(x2_start, x2_end, 200)
-    y_mid2 = x_mid2 - eps
-    axC.plot(x_mid2, y_mid2, color="#2ca02c", linewidth=3)
-
-# RF2: horizontal en y=p2_max desde x=p2_max
+# tramo oblicuo (undercut estricto): y = x − ε para p1∈(c2, p2_max)
+x_mid2 = np.linspace(c2, p2_max, 300)
+y_mid2 = x_mid2 - eps
+axC.plot(x_mid2, y_mid2, color="#2ca02c", linewidth=3)
+# horizontal en y=p2_max para p1 ≥ p2_max
 axC.plot([p2_max, p_hi], [p2_max, p2_max], color="#2ca02c", linewidth=3)
 
-# Referencias y punto (p*,p*)
-axC.plot([p_lo, p_hi], [p_lo, p_hi], linestyle="--", color="gray", linewidth=1)  # diagonal
+# Referencias y equilibrio
+axC.plot([p_lo, p_hi], [p_lo, p_hi], linestyle="--", color="gray", linewidth=1)  # diagonal de 45°
 axC.axvline(p1_max, linestyle=":", color="#1f77b4", linewidth=1)
 axC.axhline(p2_max, linestyle=":", color="#2ca02c", linewidth=1)
 axC.axvline(c1,     linestyle="-", color="#1f77b4", linewidth=2, alpha=0.25)
 axC.axhline(c2,     linestyle="-", color="#2ca02c", linewidth=2, alpha=0.25)
 
-# Equilibrio: ambas RF pasan por (p*,p*)
-axC.scatter([p_star], [p_star], marker="x", s=80, color="black", zorder=5)
+axC.scatter([p_star], [p_star], marker="x", s=80, color="k", zorder=5)
 axC.annotate("  (p*, p*)", (p_star, p_star), va="center")
 
 axC.set_xlim(p_lo, p_hi)
@@ -162,10 +151,11 @@ right.pyplot(figC, clear_figure=True)
 with st.expander("Notas / reacción 'undercut'"):
     st.markdown(
         r"""
-- En el tramo intermedio, la mejor respuesta es **estricta**: 1 responde con \(p_1 \approx p_2-\varepsilon\) y 2 con \(p_2 \approx p_1-\varepsilon\).
-- Por eso las curvas quedan **paralelas** a la diagonal (separadas por \(\varepsilon\)) y **solo coinciden** con la diagonal en el **equilibrio** \((p^*,p^*)\).
-- \(p_i^{\max}=\frac{a+c_i}{2}\) y los otros tramos permanecen verticales/horizontales en \(MC_i\) y \(p_i^{\max}\).
+- **RF₁**: \(p_1^*(p_2)=c_1\) si \(p_2\le c_1\); \(p_1^*(p_2)\approx p_2-\varepsilon\) si \(c_1<p_2<p_1^{\max}\);
+  \(p_1^*(p_2)=p_1^{\max}=\tfrac{a+c_1}{2}\) si \(p_2\ge p_1^{\max}\).
+- **RF₂**: análogo con \(c_2\) y \(p_2^{\max}=\tfrac{a+c_2}{2}\).
+- Dibujamos los tramos oblicuos como \(y=x\pm\varepsilon\) para evitar coincidencia con la diagonal;
+  **solo** en \((p^*,p^*)\) marcamos el punto de equilibrio sobre la diagonal.
         """
     )
-
 
