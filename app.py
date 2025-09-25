@@ -20,6 +20,7 @@ Cada página tiene su propia barra lateral con parámetros.
 home = st.Page(instrucciones, title="Instrucciones:")
 cournot = st.Page("pages/1_Duopolio_de_Cournot.py", title="Duopolio de Cournot")
 stack   = st.Page("pages/2_Stackelberg_Duopolio.py", title="Stackelberg Duopolio")
+colusion = st.Page("pages/3_Colusion.py", title="Colusión Cournot")
 
 # --- Router ---
-st.navigation([home, cournot, stack]).run()
+st.navigation([home, cournot, stack, colusion]).run()
