@@ -1,10 +1,10 @@
-# pages/0_Monopolio.py
+# pages/6_Monopolio.py
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 
 st.title("Monopolio (P(Q)=a − bQ, costo marginal c)")
-st.caption("Izquierda: demanda inversa, MR y MC con CS, π y DWL. Derecha: ingreso total R(Q) con elasticidad, Q* y Q_R.")
+st.caption("Izquierda: demanda inversa, MR y MC con CS, π y DWL. Derecha: ingreso total R(Q) con Q* y regiones inelástica/elástica.")
 
 # -----------------------
 # Parámetros
@@ -29,14 +29,7 @@ MR  = a - 2*b*Q                  # ingreso marginal
 MC  = np.full_like(Q, c)         # costo marginal (constante)
 R   = P_d * Q                    # ingreso total
 
-# Elasticidad precio de la demanda (en función de Q): ε(Q)=-(a-bQ)/(bQ)
-eps = np.full_like(Q, np.nan, dtype=float)
-mask_pos = Q > 0
-eps[mask_pos] = -(a - b*Q[mask_pos]) / (b * Q[mask_pos])
-# Para que no distorsione cerca de Q=0, la acotamos visualmente
-eps_clip = np.clip(eps, -10, 0)
-
-# Máximo de ingresos (ε=-1)
+# Máximo de ingresos (ε = -1)
 Q_R = a / (2*b) if a > 0 else 0.0
 R_R = a*Q_R - b*(Q_R**2)
 
@@ -98,7 +91,7 @@ axA.set_title("Monopolio: CS, π y DWL")
 axA.legend(loc="best")
 left.pyplot(figA, clear_figure=True)
 
-# (B) Ingreso total R(Q) + elasticidad (eje derecho)
+# (B) Ingreso total R(Q) con regiones elástica/inelástica
 figB, axB = plt.subplots()
 axB.plot(Q, R, linewidth=2, label="Ingreso total R(Q)=(a-bQ)Q")
 axB.scatter([Q_R], [R_R], zorder=3)                      # pico de ingresos
@@ -107,22 +100,15 @@ axB.axvline(Q_m, linestyle=":",  label="Q* (máx. ganancia)")
 axB.set_xlim(0, Q_int)
 axB.set_xlabel("Cantidad Q")
 axB.set_ylabel("Ingreso total")
-axB.set_title("Ingreso total y elasticidad")
+axB.set_title("Ingreso total")
 
-# Eje derecho para ε(Q)
-axE = axB.twinx()
-axE.plot(Q[mask_pos], eps_clip[mask_pos], label="Elasticidad ε(Q)")
-axE.hlines(-1.0, 0, Q_int, linestyles=":", label="ε = -1")
-axE.set_ylim(-10, 0)
-axE.set_ylabel("Elasticidad (ε)")
+# Etiquetas de región: a la izquierda inelástica, a la derecha elástica
+# Colocamos el texto cerca del nivel del pico para que se lea bien.
+y_txt = R_R * 0.92 if R_R > 0 else max(R) * 0.6
+axB.text(Q_R * 0.5, y_txt, "demanda inelástica", ha="center", va="top")
+axB.text((Q_R + Q_int) * 0.5, y_txt, "demanda elástica", ha="center", va="top")
 
-# Leyenda combinada (ambos ejes)
-handles, labels = [], []
-for ax in (axB, axE):
-    h, l = ax.get_legend_handles_labels()
-    handles += h; labels += l
-axB.legend(handles, labels, loc="best")
-
+axB.legend(loc="best")
 right.pyplot(figB, clear_figure=True)
 
 with st.expander("Fórmulas"):
@@ -130,12 +116,11 @@ with st.expander("Fórmulas"):
         r"""
 - Demanda inversa: \(P(Q)=a-bQ\).
 - Ingreso total: \(R(Q)=(a-bQ)Q\).
-- **Elasticidad**: \(\varepsilon(Q)=\dfrac{dQ}{dP}\dfrac{P}{Q}=-\dfrac{a-bQ}{bQ}\).
 - Ingreso marginal: \(MR(Q)=a-2bQ\).
 - Óptimo de monopolio: \(MR(Q^*)=MC=c \Rightarrow Q^*=\dfrac{a-c}{2b}\), \(P^*=a-bQ^*\) (si \(a>c\)).
+- **Máximo de ingresos**: \(Q_R=\dfrac{a}{2b}\)  (a la izquierda la demanda es **inelástica**, a la derecha **elástica**).
 - Competencia perfecta: \(Q^{pc}=\dfrac{a-c}{b}\) (si \(a>c\)).
 - Áreas: \(CS=\tfrac{1}{2}Q^*(a-P^*)\), \(\pi=(P^*-c)Q^*\), \(\mathrm{DWL}=\tfrac{1}{2}(Q^{pc}-Q^*)(P^*-c)\).
         """
     )
-
 
