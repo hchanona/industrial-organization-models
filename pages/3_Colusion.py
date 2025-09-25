@@ -73,3 +73,28 @@ df = pd.DataFrame({
     "δ_i*": np.round(delta_i, 2),
 })
 st.dataframe(df, use_container_width=True)
+
+# ---------- Gráfico de demanda con QN y QC (simple) ----------
+Qmax = max(a / max(b, 1e-9), QN, QC, 1.0) * 1.05
+Qline = np.linspace(0, Qmax, 400)
+Pline = np.maximum(a - b * Qline, 0.0)
+
+st.subheader("Demanda inversa y marcadores Cournot/Cartel")
+fig, ax = plt.subplots(figsize=(6.2, 4.6))
+ax.plot(Qline, Pline, label="P(Q)=a−bQ")
+ax.axvline(QN, linestyle="--", label=f"Qᴺ={QN:.2f}")
+ax.axhline(PN, linestyle="--")
+ax.axvline(QC, linestyle="--", label=f"Qᶜ={QC:.2f}")
+ax.axhline(PC, linestyle="--")
+ax.scatter([QN, QC], [PN, PC], zorder=5)
+ax.set_xlabel("Q"); ax.set_ylabel("P")
+ax.legend(loc="best"); ax.grid(True, linewidth=0.5, alpha=0.5)
+st.pyplot(fig)
+
+# ---------- Notas ----------
+with st.expander("Notas y supuestos"):
+    st.markdown("""
+- Reparto de cartel **igual en cantidades** (simple y transparente). Se puede cambiar por reparto igual de **utilidades** o por **ponderaciones** si lo prefieres.
+- Si algunos \(q_i^N\) salen 0 con tus parámetros, es porque el costo de esa firma es demasiado alto para el equilibrio interior.
+- El umbral \(\\delta^* = \\max_i \\delta_i^*\\). Si \(\\delta_i^*\\le 0\), la firma no tiene incentivos a desviarse; si \(\\delta_i^*\\ge 1\), la colusión no es sostenible con gatillo para esa firma.
+""")
