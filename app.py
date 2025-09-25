@@ -22,8 +22,8 @@ Cada página tiene su propia barra lateral con parámetros.
 # --- Definir páginas del multipágina con títulos personalizados ---
 home       = st.Page(instrucciones, title="Instrucciones:")
 cournot    = st.Page("pages/1_Duopolio_de_Cournot.py",          title="Duopolio de Cournot")
-oligo_asim = st.Page("pages/5_Oligopolio_Cournot_Asimetrico.py", title="Oligopolio Cournot (asim.)")
-stack      = st.Page("pages/2_Stackelberg_Duopolio.py",         title="Stackelberg Duopolio")
+oligo_asim = st.Page("pages/5_Oligopolio_Cournot_Asimetrico.py", title="Oligopolio de Cournot")
+stack      = st.Page("pages/2_Stackelberg_Duopolio.py",         title="Duopolio de Stackelberg")
 hotelling  = st.Page("pages/4_Hotelling_Lineal.py",             title="Hotelling lineal")
 colusion   = st.Page("pages/3_Colusion.py",                     title="Colusión Cournot")
 
