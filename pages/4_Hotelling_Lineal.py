@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 st.title("Hotelling lineal (dos firmas en 0 y 1)")
-st.caption("Demanda unitaria. Graficamos: ganancias por ubicación y el mapa de precios entregados.")
+st.caption("Demanda unitaria. Graficamos: superávit del consumidor por ubicación y el mapa de precios entregados.")
 
 # -------------------------
 # Parámetros
@@ -51,18 +51,18 @@ q1 = buy1.mean()  # longitud atendida por firma 1
 q2 = buy2.mean()  # longitud atendida por firma 2
 no_buy = 1.0 - (q1 + q2)
 
-# Punto indiferente x^ entre firmas (geometría de las rectas)
+# Punto indiferente x^ entre firmas
 x_star = np.clip((p2 - p1 + t) / (2*t), 0.0, 1.0)
 
-# Márgenes y ganancias
+# Márgenes y ganancias (para métricas)
 m1 = max(p1 - c1, 0.0)
 m2 = max(p2 - c2, 0.0)
 pi1 = m1 * q1
 pi2 = m2 * q2
 
-# Superávit del consumidor total (sin graficar la densidad)
+# Superávit del consumidor por ubicación (envolvente truncada en 0)
 Pmin = np.minimum(P1x, P2x)
-cs_density = np.maximum(S - Pmin, 0.0)  # se usa solo para CS total
+cs_density = np.maximum(S - Pmin, 0.0)
 CS = float(np.trapz(cs_density, x))
 
 # Cortes de cobertura con S: S = p1 + t*a  y  S = p2 + t*(1 - (1-b))
@@ -81,27 +81,16 @@ if no_buy > 1e-6:
     st.warning(f"Mercado **no cubierto**: {no_buy:.2f} no compra.")
 
 # -------------------------
-# (1) Ganancias por ubicación — coloreado por firma
+# (1) Superávit del consumidor por ubicación
 # -------------------------
-fig1, ax1 = plt.subplots()
-
-g1 = np.where(buy1, m1, 0.0)
-g2 = np.where(buy2, m2, 0.0)
-
-ax1.fill_between(x, 0, g1, alpha=0.35, label="π₁ por ubicación")
-ax1.fill_between(x, 0, g2, alpha=0.35, label="π₂ por ubicación")
-
-# Guías: márgenes y partición
-ax1.axvline(x_star, linestyle="--", linewidth=1)
-if m1 > 0: ax1.hlines(m1, 0, x_star, linestyles=":")
-if m2 > 0: ax1.hlines(m2, x_star, 1, linestyles=":")
-
-ax1.set_ylim(bottom=0)
-ax1.set_xlabel("Ubicación x ∈ [0,1]")
-ax1.set_ylabel("Ganancia por consumidor")
-ax1.set_title("Ganancias de las empresas a lo largo de la línea")
-ax1.legend()
-st.pyplot(fig1, clear_figure=True)
+fig2, ax2 = plt.subplots()
+ax2.plot(x, cs_density, linewidth=2)
+ax2.fill_between(x, 0, cs_density, alpha=0.3)
+ax2.axvline(x_star, linestyle="--", linewidth=1)
+ax2.set_xlabel("Ubicación x ∈ [0,1]")
+ax2.set_ylabel("Superávit del consumidor")
+ax2.set_title("Superávit del consumidor (S - precio entregado)")
+st.pyplot(fig2, clear_figure=True)
 
 # -------------------------
 # (2) Mapa de precios entregados, a y 1-b
