@@ -29,4 +29,4 @@ colusion   = st.Page("pages/3_Colusion.py",                     title="5. Colusi
 
 
 # --- Router ---
-st.navigation([home, cournot, stack, colusion, hotelling, oligo_asim]).run()
+st.navigation([home, cournot, oligo_asim, stack, hotelling, colusion]).run()
