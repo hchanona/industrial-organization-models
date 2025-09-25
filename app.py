@@ -6,23 +6,23 @@ def instrucciones():
     st.title("Instrucciones:")
 
     st.markdown(
-        """
+        r"""
 Bienvenido/a. Este es un *multipágina* en Streamlit con **siete** modelos.  
 Usa el menú lateral (☰) o la lista de páginas (arriba a la izquierda) para navegar.  
 Cada página tiene su propia barra lateral con parámetros.
 
 ### Modelos incluidos
-- **Monopolio**: demanda lineal \(P(Q)=a-bQ\); áreas **CS**, **π** y **DWL**; gráfico de **ingreso total** con regiones *inelástica* / *elástica*.
-- **Duopolio de Cournot**: cantidades simultáneas; precio, **CS**, **∑π**, **DWL** y **pie** de cuotas.
-- **Duopolio de Bertrand homogéneo**: competencia en **precios** con \(c_1,c_2\) posiblemente asimétricos; bienestar y **funciones de reacción** \(RF_1, RF_2\).
-- **Oligopolio de Cournot (asim.)**: \(N\) firmas con costos heterogéneos; precio, **CS**, **∑π**, **DWL** y cuotas.
-- **Hotelling lineal**: precios entregados \(p_1+t\,x\) y \(p_2+t(1-x)\), corte \(\hat x\), límites \(a\) y \(1-b\); **CS** agregado y mapa de precios.
+- **Monopolio**: demanda lineal \(P(Q)=a-bQ\); áreas **CS**, **\(\pi\)** y **DWL**; gráfico de **ingreso total** con regiones *inelástica*/*elástica*.
+- **Duopolio de Cournot**: cantidades simultáneas; precio, **CS**, \(\sum \pi\), **DWL** y pie de **cuotas**.
+- **Duopolio de Bertrand homogéneo**: competencia en **precios** con costos \(c_1, c_2\) (posiblemente asimétricos); bienestar y **funciones de reacción** \(RF_1, RF_2\).
+- **Oligopolio de Cournot (asim.)**: \(N\) firmas con costos heterogéneos; precio, **CS**, \(\sum \pi\), **DWL** y cuotas.
+- **Hotelling lineal**: precios entregados \(p_1+tx\) y \(p_2+t(1-x)\), punto indiferente \(\hat{x}\), límites \(a\) y \(1-b\); **CS** agregado y mapa de precios.
 - **Duopolio de Stackelberg**: líder–seguidor (cantidades secuenciales) y comparación con Cournot.
 - **Colusión Cournot**: regla de gatillo y comparación de bienestar frente a Cournot no cooperativo.
-
-¡Listo! Navega a cualquier modelo desde la barra lateral y explora cómo cambian **precio, bienestar y cuotas** con los parámetros.
-        """
+        """,
+        unsafe_allow_html=False,
     )
+
 
 
 # --- Definir páginas del multipágina con títulos personalizados ---
