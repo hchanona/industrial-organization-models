@@ -19,8 +19,6 @@ Cada página tiene su propia barra lateral con parámetros.
 - **Hotelling lineal**: precios entregados **p₁+tx** y **p₂+t(1−x)**; punto indiferente **x̂**; límites **a** y **1−b**; **CS** agregado y **mapa de precios**.
 - **Duopolio de Stackelberg**: líder–seguidor (cantidades secuenciales) y comparación con Cournot.
 - **Colusión Cournot**: regla de gatillo y comparación de bienestar frente a Cournot no cooperativo.
-
-**Tip**: si aparecen `Q=0` o áreas nulas, revisa que **a > c** (o **a > p**) y que los parámetros sean consistentes.
         """
     )
 
