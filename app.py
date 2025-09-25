@@ -26,11 +26,11 @@ Cada página tiene su propia barra lateral con parámetros.
 home       = st.Page(instrucciones, title="Instrucciones:")
 monopolio = st.Page("pages/0_Monopolio.py",                         title="1. Monopolio")
 cournot    = st.Page("pages/1_Duopolio_de_Cournot.py",              title="2. Duopolio de Cournot")
-oligo_asim = st.Page("pages/5_Oligopolio_Cournot_Asimetrico.py",    title="3. Oligopolio de Cournot")
-stack      = st.Page("pages/2_Stackelberg_Duopolio.py",             title="4. Duopolio de Stackelberg")
+bertrand   = st.Page("pages/7_Bertrand_Homogeneo.py",               title="3. Duopolio de Bertrand homogéneo")
+oligo_asim = st.Page("pages/5_Oligopolio_Cournot_Asimetrico.py",    title="4. Oligopolio de Cournot")
 hotelling  = st.Page("pages/4_Hotelling_Lineal.py",                 title="5. Hotelling lineal")
-colusion   = st.Page("pages/3_Colusion.py",                         title="6. Colusión Cournot")
-bertrand   = st.Page("pages/7_Bertrand_Homogeneo.py",               title="7. Duopolio de Bertrand homogéneo")
+stack      = st.Page("pages/2_Stackelberg_Duopolio.py",             title="6. Duopolio de Stackelberg")
+colusion   = st.Page("pages/3_Colusion.py",                         title="7. Colusión Cournot")
 
 # --- Router ---
 st.navigation([home, monopolio, cournot, bertrand, oligo_asim, hotelling, stack, colusion]).run()
