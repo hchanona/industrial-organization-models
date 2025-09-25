@@ -12,7 +12,7 @@ Usa el menú lateral (☰) o la lista de páginas (arriba a la izquierda) para n
 Cada página tiene su propia barra lateral con parámetros.
 
 ### Modelos incluidos
-- **Monopolio**: demanda lineal `P(Q)=a−bQ`; áreas **CS**, **π** y **DWL**; gráfico de **ingreso total** con regiones *inelástica* / *elástica*.
+- **Monopolio**: demanda lineal **P(Q)=a−bQ**; áreas **CS**, **π** y **DWL**; gráfico de **ingreso total** con regiones *inelástica* / *elástica*.
 - **Duopolio de Cournot**: cantidades simultáneas; precio, **CS**, **∑π**, **DWL** y pie de **cuotas**.
 - **Duopolio de Bertrand homogéneo**: competencia en **precios** con costos **c₁, c₂** (posiblemente asimétricos); bienestar y **funciones de reacción** (**RF₁**, **RF₂**).
 - **Oligopolio de Cournot (asim.)**: **N** firmas con costos heterogéneos; precio, **CS**, **∑π**, **DWL** y **cuotas**.
