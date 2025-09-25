@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 st.title("Hotelling lineal (dos firmas en 0 y 1)")
-st.caption("Demanda unitaria. Graficamos: ganancias por ubicación, superávit del consumidor y el mapa de precios entregados.")
+st.caption("Demanda unitaria. Graficamos: ganancias por ubicación y el mapa de precios entregados.")
 
 # -------------------------
 # Parámetros
@@ -60,9 +60,9 @@ m2 = max(p2 - c2, 0.0)
 pi1 = m1 * q1
 pi2 = m2 * q2
 
-# Superávit del consumidor por ubicación (envolvente truncada en 0)
+# Superávit del consumidor total (sin graficar la densidad)
 Pmin = np.minimum(P1x, P2x)
-cs_density = np.maximum(S - Pmin, 0.0)
+cs_density = np.maximum(S - Pmin, 0.0)  # se usa solo para CS total
 CS = float(np.trapz(cs_density, x))
 
 # Cortes de cobertura con S: S = p1 + t*a  y  S = p2 + t*(1 - (1-b))
@@ -104,19 +104,7 @@ ax1.legend()
 st.pyplot(fig1, clear_figure=True)
 
 # -------------------------
-# (2) Superávit del consumidor por ubicación
-# -------------------------
-fig2, ax2 = plt.subplots()
-ax2.plot(x, cs_density, linewidth=2)
-ax2.fill_between(x, 0, cs_density, alpha=0.3)
-ax2.axvline(x_star, linestyle="--", linewidth=1)
-ax2.set_xlabel("Ubicación x ∈ [0,1]")
-ax2.set_ylabel("Superávit del consumidor")
-ax2.set_title("Superávit del consumidor (S - precio entregado)")
-st.pyplot(fig2, clear_figure=True)
-
-# -------------------------
-# (3) Mapa de precios entregados, a y 1-b
+# (2) Mapa de precios entregados, a y 1-b
 # -------------------------
 fig3, ax3 = plt.subplots()
 
