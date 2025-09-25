@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 st.title("Monopolio (P(Q)=a − bQ, costo marginal c)")
-st.caption("Izquierda: demanda inversa, MR y MC con CS, π y DWL. Derecha: ingreso total R(Q) con Q* que maximiza ganancia.")
+st.caption("Izquierda: demanda inversa, MR y MC con CS, π y DWL. Derecha: ingreso total R(Q) con elasticidad, Q* y Q_R.")
 
 # -----------------------
 # Parámetros
@@ -17,40 +17,52 @@ c = col3.number_input("c (costo marginal)", min_value=0.0, value=6.0, step=0.25,
 # -----------------------
 # Cálculos básicos
 # -----------------------
-Q_int = a / b                                     # intersección de demanda con eje Q
-Q_pc  = (a - c) / b if a > c else 0.0             # óptimo competitivo: P=MC=c
-Q_m   = (a - c) / (2*b) if a > c else 0.0         # monopolio: MR=a-2bQ=c
+Q_int = a / b                               # intersección de demanda con eje Q
+Q_pc  = (a - c) / b if a > c else 0.0       # competitivo: P=MC=c
+Q_m   = (a - c) / (2*b) if a > c else 0.0   # monopolio: MR=a-2bQ=c
 P_m   = a - b*Q_m
-R_m   = P_m * Q_m                                 # ingreso total en Q*
-MR_m  = a - 2*b*Q_m                               
 
 # Curvas
 Q  = np.linspace(0, Q_int, 400)
-P_d = a - b*Q                     # demanda inversa
-MR  = a - 2*b*Q                   # ingreso marginal
-MC  = np.full_like(Q, c)          # costo marginal (constante)
-R   = P_d * Q                     # ingreso total
+P_d = a - b*Q                    # demanda inversa
+MR  = a - 2*b*Q                  # ingreso marginal
+MC  = np.full_like(Q, c)         # costo marginal (constante)
+R   = P_d * Q                    # ingreso total
+
+# Elasticidad precio de la demanda (en función de Q): ε(Q)=-(a-bQ)/(bQ)
+eps = np.full_like(Q, np.nan, dtype=float)
+mask_pos = Q > 0
+eps[mask_pos] = -(a - b*Q[mask_pos]) / (b * Q[mask_pos])
+# Para que no distorsione cerca de Q=0, la acotamos visualmente
+eps_clip = np.clip(eps, -10, 0)
+
+# Máximo de ingresos (ε=-1)
+Q_R = a / (2*b) if a > 0 else 0.0
+R_R = a*Q_R - b*(Q_R**2)
 
 # Áreas en monopolio
-CS_m = 0.5 * Q_m * (a - P_m)                      # triángulo bajo demanda y sobre P_m
-Pi_m = (P_m - c) * Q_m                            # rectángulo (P_m - c) * Q_m
-DWL  = 0.5 * max(Q_pc - Q_m, 0.0) * max(P_m - c, 0.0)
+CS_m = 0.5 * Q_m * (a - P_m)                             # triángulo bajo demanda y sobre P_m
+Pi_m = (P_m - c) * Q_m                                   # rectángulo (P_m - c) * Q_m
+DWL  = 0.5 * max(Q_pc - Q_m, 0.0) * max(P_m - c, 0.0)    # triángulo entre demanda y MC en [Qm,Qpc]
 
 # -----------------------
 # Métricas
 # -----------------------
 m1, m2, m3, m4 = st.columns(4)
-m1.metric("Q* monopolio", f"{Q_m:.2f}")
-m2.metric("P* monopolio", f"{P_m:.2f}")
+m1.metric("Q* (máx. ganancia)", f"{Q_m:.2f}")
+m2.metric("P* (monopolio)", f"{P_m:.2f}")
 m3.metric("CS (monopolio)", f"{CS_m:.2f}")
 m4.metric("DWL", f"{DWL:.2f}")
+m5, m6 = st.columns(2)
+m5.metric("Q_R (máx. ingreso)", f"{Q_R:.2f}")
+m6.metric("R(Q_R)", f"{R_R:.2f}")
 
 # -----------------------
 # Gráficos
 # -----------------------
 left, right = st.columns(2)
 
-# (A) Demanda, MR y MC con áreas CS, π y DWL
+# (A) Demanda inversa, MR y MC con áreas CS, π y DWL
 figA, axA = plt.subplots()
 
 axA.plot(Q, P_d, label="Demanda inversa")
@@ -71,12 +83,12 @@ if Q_pc > Q_m:
     Q_dwl = np.linspace(Q_m, Q_pc, 200)
     axA.fill_between(Q_dwl, a - b*Q_dwl, c, alpha=0.25, label="Pérdida de peso muerto")
 
-# Guías
+# Guías en Qm y Qpc
 axA.axvline(Q_m, linestyle=":", linewidth=1)
 axA.axvline(Q_pc, linestyle=":", linewidth=1)
 axA.text(Q_m, P_m, "  Q*", va="bottom")
 if Q_pc > 0:
-    axA.text(Q_pc, c, "  Q_pc", va="bottom")
+    axA.text(Q_pc, c,  "  Q_pc", va="bottom")
 
 axA.set_xlim(0, Q_int)
 axA.set_ylim(0, max(a, P_m, c)*1.05)
@@ -86,27 +98,43 @@ axA.set_title("Monopolio: CS, π y DWL")
 axA.legend(loc="best")
 left.pyplot(figA, clear_figure=True)
 
-# (B) Ingreso total R(Q) y Q* (máximo de ganancia)
+# (B) Ingreso total R(Q) + elasticidad (eje derecho)
 figB, axB = plt.subplots()
-axB.plot(Q, R, label="Ingreso total R(Q)=(a-bQ)Q")
-axB.axvline(Q_m, linestyle=":", label="Q* (max ganancia)")
+axB.plot(Q, R, linewidth=2, label="Ingreso total R(Q)=(a-bQ)Q")
+axB.scatter([Q_R], [R_R], zorder=3)                      # pico de ingresos
+axB.axvline(Q_R, linestyle="--", label="Q_R (máx. ingreso)")
+axB.axvline(Q_m, linestyle=":",  label="Q* (máx. ganancia)")
 axB.set_xlim(0, Q_int)
 axB.set_xlabel("Cantidad Q")
 axB.set_ylabel("Ingreso total")
-axB.set_title("Ingreso total y Q*")
-axB.legend(loc="best")
+axB.set_title("Ingreso total y elasticidad")
+
+# Eje derecho para ε(Q)
+axE = axB.twinx()
+axE.plot(Q[mask_pos], eps_clip[mask_pos], label="Elasticidad ε(Q)")
+axE.hlines(-1.0, 0, Q_int, linestyles=":", label="ε = -1")
+axE.set_ylim(-10, 0)
+axE.set_ylabel("Elasticidad (ε)")
+
+# Leyenda combinada (ambos ejes)
+handles, labels = [], []
+for ax in (axB, axE):
+    h, l = ax.get_legend_handles_labels()
+    handles += h; labels += l
+axB.legend(handles, labels, loc="best")
+
 right.pyplot(figB, clear_figure=True)
 
 with st.expander("Fórmulas"):
     st.markdown(
         r"""
-- Demanda inversa: \(P(Q)=a-bQ\).  
-- Ingreso total: \(R(Q)=P(Q)\cdot Q=(a-bQ)Q\).  
-- Ingreso marginal: \(MR(Q)=a-2bQ\).  
-- Óptimo de monopolio: \(MR(Q^*)=MC=c \Rightarrow Q^*=\dfrac{a-c}{2b}\), \(P^*=a-bQ^*\) (si \(a>c\)).  
-- Competencia perfecta: \(P=c \Rightarrow Q^{pc}=\dfrac{a-c}{b}\) (si \(a>c\)).  
-- Áreas en monopolio:  
-  \(CS=\tfrac{1}{2}Q^*(a-P^*)\), \(\pi=(P^*-c)Q^*\),  
-  \(\mathrm{DWL}=\tfrac{1}{2}(Q^{pc}-Q^*)(P^*-c)\).
+- Demanda inversa: \(P(Q)=a-bQ\).
+- Ingreso total: \(R(Q)=(a-bQ)Q\).
+- **Elasticidad**: \(\varepsilon(Q)=\dfrac{dQ}{dP}\dfrac{P}{Q}=-\dfrac{a-bQ}{bQ}\).
+- Ingreso marginal: \(MR(Q)=a-2bQ\).
+- Óptimo de monopolio: \(MR(Q^*)=MC=c \Rightarrow Q^*=\dfrac{a-c}{2b}\), \(P^*=a-bQ^*\) (si \(a>c\)).
+- Competencia perfecta: \(Q^{pc}=\dfrac{a-c}{b}\) (si \(a>c\)).
+- Áreas: \(CS=\tfrac{1}{2}Q^*(a-P^*)\), \(\pi=(P^*-c)Q^*\), \(\mathrm{DWL}=\tfrac{1}{2}(Q^{pc}-Q^*)(P^*-c)\).
         """
     )
+
