@@ -1,4 +1,4 @@
-# pages/6_Monopolio.py
+# pages/0_Monopolio.py
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -137,4 +137,5 @@ with st.expander("Fórmulas"):
 - Áreas: \(CS=\tfrac{1}{2}Q^*(a-P^*)\), \(\pi=(P^*-c)Q^*\), \(\mathrm{DWL}=\tfrac{1}{2}(Q^{pc}-Q^*)(P^*-c)\).
         """
     )
+
 
