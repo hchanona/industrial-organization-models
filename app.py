@@ -21,6 +21,7 @@ Cada página tiene su propia barra lateral con parámetros.
 
 # --- Definir páginas del multipágina con títulos personalizados ---
 home       = st.Page(instrucciones, title="Instrucciones:")
+monopolio = st.Page("pages/0_Monopolio.py", title="Monopolio")
 cournot    = st.Page("pages/1_Duopolio_de_Cournot.py",          title="1. Duopolio de Cournot")
 oligo_asim = st.Page("pages/5_Oligopolio_Cournot_Asimetrico.py", title="2. Oligopolio de Cournot")
 stack      = st.Page("pages/2_Stackelberg_Duopolio.py",         title="3. Duopolio de Stackelberg")
@@ -29,4 +30,4 @@ colusion   = st.Page("pages/3_Colusion.py",                     title="5. Colusi
 
 
 # --- Router ---
-st.navigation([home, cournot, oligo_asim, stack, hotelling, colusion]).run()
+st.navigation([monopolio, home, cournot, oligo_asim, stack, hotelling, colusion]).run()
