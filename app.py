@@ -34,7 +34,7 @@ colusion    = st.Page("pages/3_Colusion.py",                          title="7. 
 
 # --- Herramientas (nuevo) ---
 # Coloca tu script EXACTO del árbol en: pages/99_Herramientas_Arbol.py
-arbol       = st.Page("pages/Arbol.py",               title="Diseña tu árbol secuencial")
+arbol       = st.Page("pages/arbol.py",               title="Diseña tu árbol secuencial")
 
 # --- Router con secciones ---
 st.navigation({
