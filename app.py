@@ -35,9 +35,10 @@ colusion    = st.Page("pages/3_Colusion.py",                          title="7. 
 # --- Herramientas (nuevo) ---
 # Coloca tu script EXACTO del árbol en: pages/99_Herramientas_Arbol.py
 arbol       = st.Page("pages/arbol.py",               title="Diseña tu árbol secuencial")
+mixtas = st.Page("pages/mitas.py", title="Equilibrios mixtos (2×2)")
 
-# --- Router con secciones ---
+
 st.navigation({
     "Modelos": [home, monopolio, cournot, bertrand, oligo_asim, hotelling, stack, colusion],
-    "Herramientas": [arbol],
+    "Herramientas": [arbol, mixtas],
 }).run()
