@@ -1,18 +1,3 @@
-¡Hecho! Aquí tienes la **página enfocada solo en equilibrios estrictamente mixtos** (interiores).
-
-* No reporta NEs puros.
-* Solo muestra (p^*,q^*) si **0 < p^* < 1** y **0 < q^* < 1** (con tolerancia).
-* Mantiene la entrada estética con `st.data_editor`.
-* Gráficos: intersección de EU₁ y diagrama BR solo cuando existe mixto interior.
-
-Guárdalo como `pages/98_Herramientas_Mixtas_2x2.py` y deja tu router igual.
-
-```python
-# pages/98_Herramientas_Mixtas_2x2.py
-# Estrictamente mixto (interior) en juego 2×2
-# - Solo calcula y grafica si 0<p*<1 y 0<q*<1
-# - Sin try/except; redondeo a 2 decimales
-
 import io
 import numpy as np
 import pandas as pd
