@@ -1,4 +1,3 @@
-```python
 import io
 import numpy as np
 import pandas as pd
@@ -160,4 +159,3 @@ if mixed_strict:
     st.download_button("Descargar PNG del diagrama BR",
         data=buf, file_name="BR_mixto_estricto_2x2.png",
         mime="image/png", use_container_width=True)
-```
