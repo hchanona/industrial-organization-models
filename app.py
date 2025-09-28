@@ -23,14 +23,21 @@ Cada página tiene su propia barra lateral con parámetros.
     )
 
 # --- Definir páginas del multipágina con títulos personalizados ---
-home       = st.Page(instrucciones, title="Instrucciones:")
-monopolio = st.Page("pages/0_Monopolio.py",                         title="1. Monopolio")
-cournot    = st.Page("pages/1_Duopolio_de_Cournot.py",              title="2. Duopolio de Cournot")
-bertrand   = st.Page("pages/7_Bertrand_Homogeneo.py",               title="3. Duopolio de Bertrand homogéneo")
-oligo_asim = st.Page("pages/5_Oligopolio_Cournot_Asimetrico.py",    title="4. Oligopolio de Cournot")
-hotelling  = st.Page("pages/4_Hotelling_Lineal.py",                 title="5. Hotelling lineal")
-stack      = st.Page("pages/2_Stackelberg_Duopolio.py",             title="6. Duopolio de Stackelberg")
-colusion   = st.Page("pages/3_Colusion.py",                         title="7. Colusión Cournot")
+home        = st.Page(instrucciones,                                  title="Instrucciones:")
+monopolio   = st.Page("pages/0_Monopolio.py",                         title="1. Monopolio")
+cournot     = st.Page("pages/1_Duopolio_de_Cournot.py",               title="2. Duopolio de Cournot")
+bertrand    = st.Page("pages/7_Bertrand_Homogeneo.py",                title="3. Duopolio de Bertrand homogéneo")
+oligo_asim  = st.Page("pages/5_Oligopolio_Cournot_Asimetrico.py",     title="4. Oligopolio de Cournot")
+hotelling   = st.Page("pages/4_Hotelling_Lineal.py",                  title="5. Hotelling lineal")
+stack       = st.Page("pages/2_Stackelberg_Duopolio.py",              title="6. Duopolio de Stackelberg")
+colusion    = st.Page("pages/3_Colusion.py",                          title="7. Colusión Cournot")
 
-# --- Router ---
-st.navigation([home, monopolio, cournot, bertrand, oligo_asim, hotelling, stack, colusion]).run()
+# --- Herramientas (nuevo) ---
+# Coloca tu script EXACTO del árbol en: pages/99_Herramientas_Arbol.py
+arbol       = st.Page("pages/Arbol.py",               title="Diseña tu árbol secuencial")
+
+# --- Router con secciones ---
+st.navigation({
+    "Modelos": [home, monopolio, cournot, bertrand, oligo_asim, hotelling, stack, colusion],
+    "Herramientas": [arbol],
+}).run()
