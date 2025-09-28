@@ -8,23 +8,14 @@ import streamlit as st
 
 st.set_page_config(page_title="Mixto estricto (2×2)", layout="wide")
 st.title("Equilibrio de Nash estrictamente mixto — Juego 2×2")
-st.caption("Jugador 1: filas U/D. Jugador 2: columnas L/R.")
+st.caption("Convención: p = Pr[J1 juega U]; q = Pr[J2 juega L]. Ejes del diagrama: x=p, y=q.")
 
 # ====================== 1) Entrada de pagos ======================
-st.subheader("Pagos del juego")
+st.subheader("Pagos del juego (edita las celdas)")
 
-presets = {
-    "Ejemplo (mixto interior)": (
-        pd.DataFrame([[3, 1], [0, 2]], index=["U", "D"], columns=["L", "R"]),
-        pd.DataFrame([[1, 3], [2, 0]], index=["U", "D"], columns=["L", "R"]),
-    ),
-    "Coordinación (no hay mixto)": (
-        pd.DataFrame([[2, 0], [0, 1]], index=["U", "D"], columns=["L", "R"]),
-        pd.DataFrame([[2, 0], [0, 1]], index=["U", "D"], columns=["L", "R"]),
-    ),
-}
-preset = st.selectbox("Plantilla rápida (opcional)", list(presets.keys()), index=0)
-A0, B0 = presets[preset]
+# Valores iniciales solo como relleno; puedes editarlos libremente
+A0 = pd.DataFrame([[3, 1], [0, 2]], index=["U", "D"], columns=["L", "R"])  # u1
+B0 = pd.DataFrame([[1, 3], [2, 0]], index=["U", "D"], columns=["L", "R"])  # u2
 
 cU, cV = st.columns(2)
 with cU:
@@ -51,9 +42,9 @@ with cV:
 A = A_df.to_numpy(dtype=float)  # pagos J1
 B = B_df.to_numpy(dtype=float)  # pagos J2
 
-# ====================== 2) Mixto estricto ======================
-# Indiferencias:
-#  q* = (a22 - a12) / (a11 - a12 - a21 + a22),   p* = (b22 - b21) / (b11 - b12 - b21 + b22)
+# ====================== 2) Mixto estrictamente interior ======================
+# q* = (a22 - a12) / (a11 - a12 - a21 + a22)
+# p* = (b22 - b21) / (b11 - b12 - b21 + b22)
 den_q = (A[0,0] - A[0,1] - A[1,0] + A[1,1])
 den_p = (B[0,0] - B[0,1] - B[1,0] + B[1,1])
 
@@ -63,7 +54,6 @@ has_p = abs(den_p) > 1e-12
 q_star = (A[1,1] - A[0,1]) / den_q if has_q else np.nan
 p_star = (B[1,1] - B[1,0]) / den_p if has_p else np.nan
 
-# Estrictamente mixto: interior (tolerancia pequeña)
 eps = 1e-9
 mixed_strict = (
     has_q and has_p
@@ -71,25 +61,24 @@ mixed_strict = (
     and (p_star > eps) and (p_star < 1 - eps)
 )
 
-# ====================== 3) Resultados ======================
+# ====================== 3) Resultado ======================
 st.subheader("Resultado")
 
 if mixed_strict:
     p_show = round(float(p_star), 2)
     q_show = round(float(q_star), 2)
-    # Utilidades esperadas en el punto (indiferencias)
     EU1 = q_star*A[0,0] + (1 - q_star)*A[0,1]
     EU2 = p_star*B[0,0] + (1 - p_star)*B[1,0]
     st.success(f"Equilibrio estrictamente mixto:  p* = {p_show},  q* = {q_show}")
     st.write(f"EU₁(p*,q*) = {round(float(EU1), 2)}   |   EU₂(p*,q*) = {round(float(EU2), 2)}")
 else:
-    st.info("No existe **equilibrio estrictamente mixto** (interior). "
-            "O bien no hay indiferencia (denominador nulo) o p*/q* caen en {0,1}.")
+    st.info("No existe equilibrio **estrictamente mixto** (interior). "
+            "Alguno de los denominadores es 0 o p*/q* caen en {0,1}.")
 
 # ====================== 4) Gráficos ======================
 st.subheader("Gráficos")
 
-# --- A) Intersección de EU₁ (vs q) ---
+# A) Intersección de EU₁ (vs q)
 q_grid = np.linspace(0, 1, 401)
 EU_U = q_grid*A[0,0] + (1 - q_grid)*A[0,1]
 EU_D = q_grid*A[1,0] + (1 - q_grid)*A[1,1]
@@ -103,7 +92,7 @@ if mixed_strict:
 axA.set_xlabel("q"); axA.set_ylabel("EU₁"); axA.set_xlim(0,1)
 axA.grid(alpha=0.3); axA.legend(); gA.tight_layout()
 
-# --- B) Diagrama BR (solo si hay mixto estricto) ---
+# B) Diagrama BR (solo si hay mixto interior)
 c_1, c_2, lw = "tab:blue", "tab:purple", 3.0
 gB, axB = plt.subplots(figsize=(6.8, 6.8), dpi=140)
 axB.plot([0,1,1,0,0],[0,0,1,1,0], color="black", lw=1.3, zorder=1)
