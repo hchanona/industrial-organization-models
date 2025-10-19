@@ -31,6 +31,7 @@ oligo_asim  = st.Page("pages/5_Oligopolio_Cournot_Asimetrico.py",     title="4. 
 hotelling   = st.Page("pages/4_Hotelling_Lineal.py",                  title="5. Hotelling lineal")
 stack       = st.Page("pages/2_Stackelberg_Duopolio.py",              title="6. Duopolio de Stackelberg")
 colusion    = st.Page("pages/3_Colusion.py",                          title="7. Colusión Cournot")
+dm          = st.Page("pages/Doble_marginalizacion.py",               title="8. Doble marginalización")
 
 # --- Herramientas (nuevo) ---
 # Coloca tu script EXACTO del árbol en: pages/99_Herramientas_Arbol.py
@@ -39,6 +40,6 @@ mixtas = st.Page("pages/mixtas.py", title="Equilibrios mixtos (2×2)")
 
 
 st.navigation({
-    "Modelos": [home, monopolio, cournot, bertrand, oligo_asim, hotelling, stack, colusion],
+    "Modelos": [home, monopolio, cournot, bertrand, oligo_asim, hotelling, stack, colusion, dm],
     "Herramientas": [arbol, mixtas],
 }).run()
