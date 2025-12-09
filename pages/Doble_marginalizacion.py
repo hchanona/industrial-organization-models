@@ -7,6 +7,11 @@ import pandas as pd
 st.set_page_config(layout="wide")
 st.title("Doble marginalización — simulador (U–D con N minoristas)")
 
+st.markdown(
+    "[Consulta el código Python de esta página]"
+    "(https://github.com/hchanona/industrial-organization-models/edit/main/pages/Doble_marginalizacion.py)"
+)
+
 # ========================= Helpers =========================
 def _round2(x):
     return float(f"{x:.2f}")
@@ -299,3 +304,4 @@ with st.expander("Barrido de N (lista de valores)", expanded=False):
 
 # ========================= Notas =========================
 st.caption("Notas: (i) Bajo TPT con w=c_U se elimina la distorsión de DM y se recupera VI en P y Q. (ii) Con N minoristas en Cournot, la DM se atenúa al aumentar N.")
+
