@@ -7,6 +7,11 @@ import pandas as pd
 st.set_page_config(layout="wide")
 st.title("Colusión (grim) desde Cournot — simulador sin presets")
 
+st.markdown(
+    "[Ver código fuente de esta página en GitHub]"
+    "(https://github.com/hchanona/industrial-organization-models/blob/main/pages/3_Colusion.py)"
+)
+
 # ========================= Helpers =========================
 def cournot_asym(a, b, cs_arr):
     N = len(cs_arr)
@@ -279,3 +284,4 @@ with st.expander("Barrido de entrada (lista de N)", expanded=False):
 
 # ========================= Notas =========================
 st.caption("Nota: el 'cartel simple' reparte Q^C por igual. En costos asimétricos, no es el cartel eficiente; aquí se usa por transparencia pedagógica.")
+
