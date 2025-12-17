@@ -8,30 +8,28 @@ st.title("Juego en forma normal (2 jugadores): mejores respuestas y equilibrios 
 # -----------------------------
 # Helpers
 # -----------------------------
-def parse_lines(text, default_prefix, k):
-    lines = [x.strip() for x in text.split("\n") if x.strip() != ""]
-    if len(lines) != k:
-        return [f"{default_prefix}{i+1}" for i in range(k)]
-    return lines
+def parse_commas(text, default_prefix, k):
+    parts = [x.strip() for x in text.split(",") if x.strip() != ""]
+    out = parts[:k]
+    while len(out) < k:
+        out.append(f"{default_prefix}{len(out)+1}")
+    return out
 
 def best_responses(U1, U2, row_names, col_names):
     n, m = U1.shape
 
-    # BR de J1 ante cada columna (estrategia de J2)
     BR1_by_col = []
     for j in range(m):
         col_vals = U1[:, j]
         mx = np.max(col_vals)
         BR1_by_col.append([row_names[i] for i in range(n) if col_vals[i] == mx])
 
-    # BR de J2 ante cada fila (estrategia de J1)
     BR2_by_row = []
     for i in range(n):
         row_vals = U2[i, :]
         mx = np.max(row_vals)
         BR2_by_row.append([col_names[j] for j in range(m) if row_vals[j] == mx])
 
-    # Equilibrios puros: intersección de mejores respuestas
     NE = []
     for i in range(n):
         for j in range(m):
@@ -68,15 +66,14 @@ def style_marks(row_names, col_names, BR1_by_col, BR2_by_row, NE):
         styles = pd.DataFrame("", index=df.index, columns=df.columns)
         for i in range(n):
             for j in range(m):
-                # Orden de prioridad: NE > BR1/BR2
                 if (i, j) in ne_cells:
-                    styles.iloc[i, j] = "background-color: #d4edda; font-weight: 700;"  # verde suave
+                    styles.iloc[i, j] = "background-color: #d4edda; font-weight: 700;"  # NE
                 elif (i, j) in br1_cells and (i, j) in br2_cells:
-                    styles.iloc[i, j] = "background-color: #fff3cd;"  # amarillo suave
+                    styles.iloc[i, j] = "background-color: #fff3cd;"  # BR1 & BR2
                 elif (i, j) in br1_cells:
-                    styles.iloc[i, j] = "background-color: #e8f4ff;"  # azul suave
+                    styles.iloc[i, j] = "background-color: #e8f4ff;"  # BR1
                 elif (i, j) in br2_cells:
-                    styles.iloc[i, j] = "background-color: #f6e8ff;"  # morado suave
+                    styles.iloc[i, j] = "background-color: #f6e8ff;"  # BR2
         return styles
 
     return styler
@@ -96,12 +93,14 @@ st.divider()
 
 left, right = st.columns(2)
 with left:
-    st.subheader("Nombres de estrategias")
-    p1_text = st.text_area("Jugador 1 (una por línea)", value="\n".join([f"P1{i+1}" for i in range(n)]), height=120)
-    p2_text = st.text_area("Jugador 2 (una por línea)", value="\n".join([f"P2{j+1}" for j in range(m)]), height=120)
+    st.subheader("Nombres de estrategias (separados por comas)")
+    p1_text = st.text_input("Jugador 1 (filas)", value=",".join([f"P1{i+1}" for i in range(n)]))
+with right:
+    st.subheader(" ")
+    p2_text = st.text_input("Jugador 2 (columnas)", value=",".join([f"P2{j+1}" for j in range(m)]))
 
-row_names = parse_lines(p1_text, "P1", n)
-col_names = parse_lines(p2_text, "P2", m)
+row_names = parse_commas(p1_text, "P1", n)
+col_names = parse_commas(p2_text, "P2", m)
 
 # -----------------------------
 # Payoff matrices editors (U1 and U2)
@@ -109,7 +108,6 @@ col_names = parse_lines(p2_text, "P2", m)
 st.subheader("Ingresar pagos")
 st.caption("Edita las dos matrices: U1 = pagos de Jugador 1, U2 = pagos de Jugador 2.")
 
-# Session persistence so edits don't vanish too easily
 key_u1 = f"U1_{n}x{m}"
 key_u2 = f"U2_{n}x{m}"
 
@@ -118,7 +116,7 @@ if key_u1 not in st.session_state:
 if key_u2 not in st.session_state:
     st.session_state[key_u2] = pd.DataFrame(np.zeros((n, m)), index=row_names, columns=col_names)
 
-# Ensure indices/columns match current names
+# Reindex to follow name changes
 st.session_state[key_u1] = st.session_state[key_u1].reindex(index=row_names, columns=col_names, fill_value=0.0)
 st.session_state[key_u2] = st.session_state[key_u2].reindex(index=row_names, columns=col_names, fill_value=0.0)
 
@@ -140,7 +138,6 @@ with c2:
         num_rows="fixed",
     )
 
-# Update session
 st.session_state[key_u1] = U1_df
 st.session_state[key_u2] = U2_df
 
@@ -156,7 +153,6 @@ st.divider()
 st.subheader("Resultados")
 
 r1, r2 = st.columns([1, 1])
-
 with r1:
     st.markdown("**Mejores respuestas de Jugador 1 (filas) ante cada estrategia de Jugador 2 (columna):**")
     for j, c in enumerate(col_names):
@@ -172,11 +168,14 @@ if len(NE) == 0:
     st.write("No hay equilibrios puros.")
 else:
     for (i, j) in NE:
-        st.write(f"- (**{row_names[i]}**, **{col_names[j]}**) con pagos ({round(float(U1[i,j]),decimals)}, {round(float(U2[i,j]),decimals)})")
+        st.write(
+            f"- (**{row_names[i]}**, **{col_names[j]}**) con pagos "
+            f"({round(float(U1[i,j]),decimals)}, {round(float(U2[i,j]),decimals)})"
+        )
 
 st.subheader("Tabla de pagos (u1,u2) con marcas")
 tbl = payoff_table(U1, U2, row_names, col_names, decimals=decimals)
 styler_fn = style_marks(row_names, col_names, BR1_by_col, BR2_by_row, NE)
 
-st.caption("Verde = equilibrio puro; azul = BR de J1; morado = BR de J2; amarillo = ambos BR (pero no necesariamente NE si hay empates raros).")
+st.caption("Verde = equilibrio puro; azul = BR de J1; morado = BR de J2; amarillo = ambos BR.")
 st.dataframe(tbl.style.apply(styler_fn, axis=None), use_container_width=True)
